@@ -9,7 +9,9 @@ public class App {
         int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "9090"));
 
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(port);
+        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "9090"));
+
+tomcat.setPort(port);
         tomcat.getConnector(); // required in newer Tomcat versions
 
         // Point to webapp directory
