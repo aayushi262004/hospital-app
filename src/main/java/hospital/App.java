@@ -1,9 +1,7 @@
 package hospital;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.Context;
-
-import java.io.File;
+import org.apache.catalina.startup.Tomcat;
 
 public class App {
 
@@ -19,15 +17,13 @@ public class App {
 
         tomcat.getConnector();
 
-        // Web app directory
-        Context ctx = tomcat.addWebapp(
-                "",
-                new File("src/main/webapp").getAbsolutePath()
-        );
+        // Create empty context
+        Context ctx = tomcat.addContext("", null);
 
         // Register servlet
         Tomcat.addServlet(ctx, "PatientServlet", new PatientServlet());
 
+        // Map URL
         ctx.addServletMappingDecoded(
                 "/patients",
                 "PatientServlet"
