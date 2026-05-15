@@ -3,8 +3,12 @@ package hospital;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+
 import java.io.*;
 import java.util.List;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 @WebServlet("/patients")
 public class PatientServlet extends HttpServlet {
@@ -31,15 +35,19 @@ public class PatientServlet extends HttpServlet {
         List<Patient> result;
 
         if ("age".equals(action)) {
+
             result = manager.sortByAge();
-        }
-        else if ("name".equals(action)) {
+
+        } else if ("name".equals(action)) {
+
             result = manager.sortByName();
-        }
-        else if ("above60".equals(action)) {
+
+        } else if ("above60".equals(action)) {
+
             result = manager.patientsAbove60();
-        }
-        else {
+
+        } else {
+
             result = manager.getAllPatients();
         }
 
@@ -81,6 +89,7 @@ public class PatientServlet extends HttpServlet {
         out.println("<ul>");
 
         for (Patient p : result) {
+
             out.println("<li>" + p.toString() + "</li>");
         }
 
@@ -101,8 +110,51 @@ public class PatientServlet extends HttpServlet {
 
         String disease = req.getParameter("disease");
 
+        // Add to local memory list
         manager.addPatient(new Patient(id, name, age, disease));
 
-        res.sendRedirect("/patients");
+        try {
+
+            Connection conn = DBConnection.getConnection();
+
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO patients VALUES (?, ?, ?, ?)"
+            );
+
+            ps.setInt(1, id);
+
+            ps.setString(2, name);
+
+            ps.setInt(3, age);
+
+            ps.setString(4, disease);
+
+            ps.executeUpdate();
+
+            System.out.println("Patient Added to Database!");
+
+            ps.close();
+
+            conn.close();
+
+            // Show success message directly
+            res.setContentType("text/html");
+
+            PrintWriter out = res.getWriter();
+
+            out.println("<html><body>");
+
+            out.println("<h2>Patient Added Successfully!</h2>");
+
+            out.println("<a href='patients'>Go Back</a>");
+
+            out.println("</body></html>");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            res.getWriter().println("Database Error!");
+        }
     }
 }
