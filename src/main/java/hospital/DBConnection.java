@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class DBConnection {
 
     private static final String URL =
-        "jdbc:postgresql://hospitaldb_4hvp_user:WqQXjg2C6bt1fRMdbJVKEzQQ4N6ZjNCI@dpg-d83ebhjrjlhs73ef8reg-a.oregon-postgres.render.com/hospitaldb_4hvp";
+      "jdbc:postgresql://hospitaldb_4hvp_user:WqQXjg2C6bt1fRMdbJVKEzQQ4N6ZjNCI@dpg-d83ebhjrjlhs73ef8reg-a.oregon-postgres.render.com:5432/hospitaldb_4hvp?sslmode=require";
 
     public static Connection getConnection() {
 
